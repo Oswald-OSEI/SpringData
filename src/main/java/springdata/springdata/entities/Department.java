@@ -1,10 +1,19 @@
 package springdata.springdata.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
+@Getter
+
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
