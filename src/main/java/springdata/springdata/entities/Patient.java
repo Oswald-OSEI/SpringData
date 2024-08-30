@@ -9,11 +9,11 @@ public class Patient extends PersonsInHospital {
     private String patientNumber;
     private String diagnosis;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "bed")
     private Bed bed;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "Doctor")
     private Doctor doctor;
 
