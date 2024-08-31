@@ -1,5 +1,6 @@
 package springdata.springdata.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,5 +30,6 @@ public class Ward {
     private long wardNumber;
 
     @OneToMany(mappedBy = "ward")
+    @JsonManagedReference
     private List<Bed> bedList;
 }

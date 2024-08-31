@@ -12,6 +12,7 @@ import springdata.springdata.repositories.BedRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BedService {
@@ -40,10 +41,16 @@ public class BedService {
     }
 
 
-    @Cacheable(value = "bedCache", unless = "#result==null")
+    @Cacheable(value = "bedCache", key = "'allregisteredBeds'")
     public List<BedDto> getAllBeds() {
+
+
         List<Bed> beds = bedRepository.findAll();
-        return beds.stream().map(this::convertToDto).toList();
+        List<BedDto> bedDtos = beds.stream()
+                .map(this::convertToDto)
+                .toList();
+
+        return bedDtos;
     }
 
     @Cacheable(value = "bedCache", unless = "#result==null")

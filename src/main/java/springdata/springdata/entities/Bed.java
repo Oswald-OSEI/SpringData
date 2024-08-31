@@ -1,5 +1,6 @@
 package springdata.springdata.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,5 +21,6 @@ public class Bed {
 
     @ManyToOne
     @JoinColumn(name= "ward")
+    @JsonBackReference
     private Ward ward;
 }
