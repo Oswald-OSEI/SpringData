@@ -23,11 +23,6 @@ public class BedController {
         return ResponseEntity.ok().body(savedBed);
     }
 
-    @PostMapping("/addBedCustom")
-    public ResponseEntity<BedDto> addBedCustom(@RequestBody BedDto bedDto) {
-        BedDto savedBed = bedService.addBedCustomQuery(bedDto);
-        return ResponseEntity.ok().body(savedBed);
-    }
 
     @GetMapping("/allBeds")
     public ResponseEntity<List<BedDto>> getAllBeds() {
@@ -44,12 +39,12 @@ public class BedController {
     }
 
     @GetMapping("/checkBed/{id}")
-    public ResponseEntity<BedDto> checkBed(@PathVariable Long id) {
+    public ResponseEntity<BedDto> checkBed(@PathVariable String id) {
         return ResponseEntity.ok(bedService.getBedById(id));
     }
 
     @DeleteMapping("/deletedBed/{id}")
-    public void deleteBed(@PathVariable Long id) {
+    public void deleteBed(@PathVariable String id) {
         bedService.deleteBed(id);
     }
 

@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 public class WardDto {
 
-    private long id;
+    private String id;
 
 
     private Department department;

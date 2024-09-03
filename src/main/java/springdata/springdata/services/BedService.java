@@ -12,76 +12,64 @@ import springdata.springdata.repositories.BedRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BedService {
-    private final TransactionTemplate transactionTemplate;
-    BedRepository bedRepository;
-    public BedService(BedRepository bedRepository, TransactionTemplate transactionTemplate) {
+
+    private final BedRepository bedRepository;
+
+    public BedService(BedRepository bedRepository) {
         this.bedRepository = bedRepository;
-        this.transactionTemplate = transactionTemplate;
     }
 
     @Transactional
     @CachePut(value = "bedCache", key = "#result.id")
     public BedDto addBed(BedDto bedDto) {
-     Bed newBed = bedRepository.save(convertToEntity(bedDto));
-     return convertToDto(newBed);
+        Bed newBed = bedRepository.save(convertToEntity(bedDto));
+        return convertToDto(newBed);
     }
 
-
-
-    public BedDto addBedCustomQuery(BedDto bedDto) {
-        transactionTemplate.execute(status-> {
-            bedRepository.addBed(bedDto.getBedNumber(), bedDto.getWard().getId());
-            return bedDto;
-        });
-        return bedDto;
-    }
-
-
-    @Cacheable(value = "bedCache", key = "'allregisteredBeds'")
+    @Cacheable(value = "bedCache", key = "'allRegisteredBeds'")
     public List<BedDto> getAllBeds() {
-
-
         List<Bed> beds = bedRepository.findAll();
-        List<BedDto> bedDtos = beds.stream()
+        return beds.stream()
                 .map(this::convertToDto)
                 .toList();
-
-        return bedDtos;
     }
 
-    @Cacheable(value = "bedCache", unless = "#result==null")
-    public BedDto getBedById(Long id) {
-        return convertToDto(bedRepository.findById(id).orElseThrow());
+    @Cacheable(value = "bedCache", key = "#id", unless = "#result == null")
+    public BedDto getBedById(String id) {  // Changed to String since MongoDB uses String for IDs
+        return bedRepository.findById(id)
+                .map(this::convertToDto)
+                .orElseThrow();  // Consider using a specific exception, e.g., ResourceNotFoundException
     }
 
     @Transactional
     @CachePut(value = "bedCache", key = "#bedDto.id")
     public BedDto updateBed(BedDto bedDto) {
-        BedDto editedBedDto = new BedDto();
-        if (bedDto.getId()!=null){
-            Optional<Bed> editBed = bedRepository.findById(bedDto.getId());
-            if (editBed.isPresent()) {
-                Bed bed = editBed.get();
-                bed.setBedNumber(bedDto.getBedNumber());
-                bed.setWard(bedDto.getWard());
-                bedRepository.save(bed);
-                editedBedDto.setBedNumber(bedDto.getBedNumber());
-                editedBedDto.setWard(bedDto.getWard());
-            }
+        Optional<Bed> editBed = bedRepository.findById(bedDto.getId());
+        if (editBed.isPresent()) {
+            Bed bed = editBed.get();
+            bed.setBedNumber(bedDto.getBedNumber());
+            bed.setWard(bedDto.getWard());
+            bedRepository.save(bed);
+            return convertToDto(bed);
         }
-        return editedBedDto;
+        throw new IllegalArgumentException("Bed not found with id: " + bedDto.getId());
     }
 
+    @Transactional
     @CacheEvict(value = "bedCache", key = "#id")
-    public void deleteBed(long id) {
-        bedRepository.deleteById(id);
+    public void deleteBed(String id) {  // Changed to String for consistency with MongoDB IDs
+        if (bedRepository.existsById(id)) {
+            bedRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("Bed not found with id: " + id);
+        }
     }
 
-    public BedDto convertToDto(Bed bed){
+    // Conversion methods
+    private BedDto convertToDto(Bed bed) {
         BedDto bedDto = new BedDto();
         bedDto.setId(bed.getId());
         bedDto.setBedNumber(bed.getBedNumber());
@@ -89,11 +77,10 @@ public class BedService {
         return bedDto;
     }
 
-    public Bed convertToEntity(BedDto bedDto){
+    private Bed convertToEntity(BedDto bedDto) {
         Bed bed = new Bed();
         bed.setBedNumber(bedDto.getBedNumber());
         bed.setWard(bedDto.getWard());
         return bed;
     }
-
 }

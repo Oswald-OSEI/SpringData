@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DepartmentDto {
-    private long id;
+    private String id;
 
     private String code;
 

@@ -1,7 +1,9 @@
 package springdata.springdata.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Field;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,27 +11,29 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Entity
+@Document(collection = "wards") // Specify the MongoDB collection name
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 public class Ward {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "department")
+    @Field("_id") // Optional: specify a custom field name for the MongoDB Object ID
+    private String id; // MongoDB uses String for Object IDs
+
+    @DBRef // Reference to a Department document
+    @Field("department")
     private Department department;
 
-    @OneToOne
-    @JoinColumn(name = "supervisor")
+    @DBRef // Reference to a Nurse document
+    @Field("supervisor")
     private Nurse supervisor;
 
+    @Field("ward_number")
     private long wardNumber;
 
-    @OneToMany(mappedBy = "ward")
-    @JsonManagedReference
+    @DBRef // List of references to Bed documents
+    @Field("bed_list")
     private List<Bed> bedList;
 }

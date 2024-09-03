@@ -1,19 +1,19 @@
 package springdata.springdata.entities;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
+@Document(collection = "PersonsInHospital") // Specify the MongoDB collection name
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
-@DiscriminatorValue("Doctor")
-public class Doctor extends  Employee {
+public class Doctor extends Employee {
+    @Field("specialty")
     private String specialty;
 
     public void setEmployeeType(){

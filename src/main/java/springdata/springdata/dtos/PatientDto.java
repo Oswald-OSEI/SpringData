@@ -7,7 +7,7 @@ import springdata.springdata.entities.Bed;
 import springdata.springdata.entities.Doctor;
 
 public class PatientDto {
-    private long id;
+    private String id;
     private String Surname;
     private String address;
     private String tel_number;

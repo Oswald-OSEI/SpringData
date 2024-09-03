@@ -14,7 +14,7 @@ import springdata.springdata.entities.Employee;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NurseDto {
-    private long id;
+    private String id;
     private String surname;
     private String address;
     private String tel_number;

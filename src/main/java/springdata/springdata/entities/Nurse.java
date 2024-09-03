@@ -1,30 +1,30 @@
 package springdata.springdata.entities;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Field;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
+@Document(collection = "PersonsInHospital") // Specify the MongoDB collection name
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
-@DiscriminatorValue("Nurse")
-public class Nurse extends  Employee{
-private String rotation;
-private String salary;
+public class Nurse extends Employee {
+    @Field("rotation")
+    private String rotation;
 
-@OneToOne
-@JoinColumn(name = "Department")
-private Department department;
+    @Field("salary")
+    private String salary;
 
+    @DBRef // Reference to a Department document
+    @Field("department")
+    private Department department;
 
-public void setEmployeeType(){
-    this.setEmployeeType("Nurse");
+    public void setEmployeeType(){
+        this.setEmployeeType("Nurse");
     }
 }

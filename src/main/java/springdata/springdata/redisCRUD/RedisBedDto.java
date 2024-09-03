@@ -1,4 +1,4 @@
-package springdata.springdata.dtos;
+package springdata.springdata.redisCRUD;
 
 import lombok.*;
 import springdata.springdata.entities.Ward;
@@ -8,8 +8,8 @@ import springdata.springdata.entities.Ward;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class BedDto {
+public class RedisBedDto {
     private String id;
     private String bedNumber;
-    private Ward ward;
+    private String ward;
 }

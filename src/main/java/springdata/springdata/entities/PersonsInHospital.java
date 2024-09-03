@@ -1,7 +1,10 @@
 package springdata.springdata.entities;
 
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,16 +12,23 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@Entity
+@Document(collection = "PersonsInHospital")
 @AllArgsConstructor
 @NoArgsConstructor
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "discriminator", discriminatorType = DiscriminatorType.STRING )
-public  class PersonsInHospital {
+public class PersonsInHospital {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private String id;  // Use String for MongoDB's ObjectId
+
+    @Field("surname")
     private String surname;
+
+    @Field("address")
     private String address;
-    private String tel_number;
+
+    @Field("tel_number")
+    private String telNumber;
+
+    @Field("PersonType")
+    private String PersonType;
 }
